@@ -10,7 +10,7 @@
 #include "myDebounce.h"
 #include "stdio.h"
 
-void debounce_update_button(register WORD *wButton_history, register BOOL bCurrentState)
+void IRAM_ATTR debounce_update_button(register WORD *wButton_history, register BOOL bCurrentState)
 {
   //*wButton_history = (*wButton_history << 1) | bCurrentState;
   *wButton_history = (*wButton_history << 1);

@@ -29,7 +29,7 @@ typedef enum
 extern "C" {
 #endif
 
-void debounce_update_button(register WORD *wButton_history, register BOOL bCurrentState);
+void IRAM_ATTR debounce_update_button(register WORD *wButton_history, register BOOL bCurrentState);
 BOOL debounce_is_button_pressed(register WORD *wButton_history);
 BOOL debounce_is_button_released(register WORD *wButton_history);
 BOOL debounce_is_button_down(register WORD *wButton_history);
