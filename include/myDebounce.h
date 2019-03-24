@@ -2,7 +2,7 @@
 #define __myDebounce_h
 
 #include "Types.h"
-
+#include "esp_attr.h"  // IRAM_ATTR for debounce_update_button() function
 
 #define MASK_BUTTON_PRESSED            0xF00F  // FxxF x->is don't care
 #define MASK_BUTTON_PRESSED_CONFIRM    0x000F  // 0xxF
@@ -22,19 +22,21 @@ typedef enum
 {
   eNOT_PRESSED = 0,
   eSHORT_PRESS,
-  eLONG_PRESS
+  eLONG_PRESS,
+  ePRESSED,
+  eRELEASED
 } EWIHCH_PRESS;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void IRAM_ATTR debounce_update_button(register WORD *wButton_history, register BOOL bCurrentState);
-BOOL debounce_is_button_pressed(register WORD *wButton_history);
-BOOL debounce_is_button_released(register WORD *wButton_history);
-BOOL debounce_is_button_down(register WORD *wButton_history);
-BOOL debounce_is_button_up(register WORD *wButton_history);
-EWIHCH_PRESS debounce_long_short_press(register WORD *wButton_history, register BYTE *byCounter);
+void IRAM_ATTR debounce_update_button(register WORD *pwButton_history, register BOOL bCurrentState);
+BOOL debounce_is_button_pressed(register WORD *pwButton_history);
+BOOL debounce_is_button_released(register WORD *pwButton_history);
+BOOL debounce_is_button_down(register WORD *pwButton_history);
+BOOL debounce_is_button_up(register WORD *pwButton_history);
+EWIHCH_PRESS debounce_whichPress(register WORD *pwButton_history, register BYTE *byCounter);
 
 #ifdef __cplusplus
 }

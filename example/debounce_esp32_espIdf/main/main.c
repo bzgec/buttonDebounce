@@ -90,7 +90,7 @@ void task_read_buttons(void *pvParameter)
 		}
 
 		EWIHCH_PRESS ePress;
-		ePress = debounce_long_short_press(&g_wButtonHistory_set, &g_byButtonCounter_set);
+		ePress = debounce_whichPress(&g_wButtonHistory_set, &g_byButtonCounter_set);
 		if(ePress == eLONG_PRESS)
 		{
 			printf("S long button press\n");
@@ -98,6 +98,14 @@ void task_read_buttons(void *pvParameter)
 		else if(ePress == eSHORT_PRESS)
 		{
 			printf("S short button press\n");
+		}
+		if(ePress == ePRESSED)
+		{
+			printf("S pressed\n");
+		}
+		else if(ePress == eRELEASED)
+		{
+			printf("S released\n");
 		}
 
     vTaskDelay(TASK_INTERVAL_BUTTONS / portTICK_PERIOD_MS);

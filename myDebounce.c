@@ -10,50 +10,51 @@
 #include "myDebounce.h"
 #include "stdio.h"
 
-void IRAM_ATTR debounce_update_button(register WORD *wButton_history, register BOOL bCurrentState)
+void IRAM_ATTR debounce_update_button(register WORD *pwButton_history, register BOOL bCurrentState)
 {
-  //*wButton_history = (*wButton_history << 1) | bCurrentState;
-  *wButton_history = (*wButton_history << 1);
-  *wButton_history |= bCurrentState;
+  *pwButton_history = (*pwButton_history << 1) | bCurrentState;
+  //*pwButton_history = (*pwButton_history << 1);
+  //*pwButton_history |= bCurrentState;
 }
 
-BOOL debounce_is_button_pressed(register WORD *wButton_history)
+BOOL debounce_is_button_pressed(register WORD *pwButton_history)
 {
   BOOL bPressed = 0;    
-  if ((*wButton_history & MASK_BUTTON_PRESSED) == MASK_BUTTON_PRESSED_CONFIRM)
+  if ((*pwButton_history & MASK_BUTTON_PRESSED) == MASK_BUTTON_PRESSED_CONFIRM)
   { 
     bPressed = 1;
-    *wButton_history = MASK_BUTTON_DOWN;
+    *pwButton_history = MASK_BUTTON_DOWN;
   }
   return bPressed;
 }
 
-BOOL debounce_is_button_released(register WORD *wButton_history)
+BOOL debounce_is_button_released(register WORD *pwButton_history)
 {
   BOOL bPressed = 0;    
-  if ((*wButton_history & MASK_BUTTON_RELEASED) == MASK_BUTTON_RELEASED_CONFIRM)
+  if ((*pwButton_history & MASK_BUTTON_RELEASED) == MASK_BUTTON_RELEASED_CONFIRM)
   { 
     bPressed = 1;
-    *wButton_history = MASK_BUTTON_UP;
+    *pwButton_history = MASK_BUTTON_UP;
   }
   return bPressed;
 }
 
-BOOL debounce_is_button_down(register WORD *wButton_history)
+BOOL debounce_is_button_down(register WORD *pwButton_history)
 {
-  return (*wButton_history == MASK_BUTTON_DOWN);
+  return (*pwButton_history == MASK_BUTTON_DOWN);
 }
 
-BOOL debounce_is_button_up(register WORD *wButton_history)
+BOOL debounce_is_button_up(register WORD *pwButton_history)
 {
-  return (*wButton_history == MASK_BUTTON_UP);
+  return (*pwButton_history == MASK_BUTTON_UP);
 }
 
-EWIHCH_PRESS debounce_long_short_press(register WORD *wButton_history, register BYTE *byCounter)
+EWIHCH_PRESS debounce_whichPress(register WORD *pwButton_history, register BYTE *byCounter)
 {
   EWIHCH_PRESS ePress = eNOT_PRESSED;
 
-  if(*wButton_history == MASK_BUTTON_DOWN)
+  // debounce_is_button_down
+  if(*pwButton_history == MASK_BUTTON_DOWN)
   {
     if(*byCounter < MAX_COUNTER_NUMBER)
     {
@@ -63,7 +64,8 @@ EWIHCH_PRESS debounce_long_short_press(register WORD *wButton_history, register 
     printf("*byCounter: %d\n", *byCounter);
     #endif  // PRINT_COUNTER_VALUE
   }
-  else if(*wButton_history == MASK_BUTTON_UP && *byCounter != 0)
+  // debounce_is_button_up && ...
+  else if(*pwButton_history == MASK_BUTTON_UP && *byCounter != 0)
   {
     if(*byCounter > LONG_PRESS_THRESHOLD)
     {
@@ -74,6 +76,14 @@ EWIHCH_PRESS debounce_long_short_press(register WORD *wButton_history, register 
       ePress = eSHORT_PRESS;
     }
     *byCounter = 0;
+  }
+  else if(debounce_is_button_released(pwButton_history))
+  {
+    ePress = eRELEASED;
+  }
+  else if(debounce_is_button_pressed(pwButton_history))
+  {
+    ePress = ePRESSED;
   }
 
   return ePress;  
