@@ -11,7 +11,21 @@
 #define MASK_BUTTON_DOWN               0xFFFF  // all bits must be one (maybe bad?)
 #define MASK_BUTTON_UP                 0x0000  // all bits must be zero (maybe bad?)
 
-#define LONG_PRESS_THRESHOLD 150  // the number that separates the short press from long press
+/*
+ * DETECTING LONG PRESS ('eLONG_PRESS')
+ *   Lets say that for long press button needs to be held down for 2s (2000ms):
+ *     - 'debounce_update_button()' called every 5ms (ISR)
+ *     - 'debounce_whichPress()' called every 20ms (task)
+ *     - Simple metod (good enough):
+ *         2000ms / 20ms = 100 
+ *         This means that 'LONG_PRESS_THRESHOLD' should be set to 100
+ *     - Correct metod:
+ *         16*5ms = 80ms (this long button needs to be '1' to increment '*byCounter', 
+ *                        meaning that 80ms is needed to detect 'eSHORT_PRESS' or 'eLONG_PRESS' button press)
+ *         (2000ms - 80ms) / 20ms = 96
+ *         This means that 'LONG_PRESS_THRESHOLD' should be set to 96
+ */
+#define LONG_PRESS_THRESHOLD 192  // the number that separates the short press from long press
 #define MAX_COUNTER_NUMBER   255  // max byte number...
 
 // uncomment to test button counter (to determine whether it is long or shor press)
