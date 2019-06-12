@@ -71,6 +71,9 @@ void app_main()
 void task_read_buttons(void *pvParameter)
 {
 	BYTE nn = 0;
+	TickType_t xLastWakeTime;
+
+	xLastWakeTime = xTaskGetTickCount();
   while(1) 
   {
 		if (debounce_is_button_released(&g_wButtonHistory_left))
@@ -108,7 +111,9 @@ void task_read_buttons(void *pvParameter)
 			printf("S released\n");
 		}
 
-    vTaskDelay(TASK_INTERVAL_BUTTONS / portTICK_PERIOD_MS);
+		// Use 'vTaskDelayUntil()' so that interval is executed with fixed interval
+    vTaskDelayUntil(&xLastWakeTime, TASK_INTERVAL_BUTTONS / portTICK_PERIOD_MS);
+    //vTaskDelay(TASK_INTERVAL_BUTTONS / portTICK_PERIOD_MS);
   }
 }
 #endif  // ENABLE_BUTTONS
