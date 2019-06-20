@@ -63,6 +63,7 @@ EWIHCH_PRESS debounce_whichPress(register WORD *pwButton_history, register BYTE 
     #ifdef PRINT_COUNTER_VALUE
     printf("*byCounter: %d\n", *byCounter);
     #endif  // PRINT_COUNTER_VALUE
+    ePress = eDOWN;
   }
   // debounce_is_button_up && ...
   else if(*pwButton_history == MASK_BUTTON_UP && *byCounter != 0)
